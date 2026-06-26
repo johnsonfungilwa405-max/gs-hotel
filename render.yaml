@@ -1,0 +1,73 @@
+databases:
+  - name: gs-hotel-db
+    plan: free
+    databaseName: gs_hotel
+    user: gs_hotel_user
+
+services:
+  # Shared backend API used by all three frontends
+  - type: web
+    name: gs-hotel-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gs-hotel-db
+          property: connectionString
+      - key: ALLOWED_ORIGINS
+        value: https://gs-hotel-user.onrender.com,https://gs-hotel-admin.onrender.com,https://gs-hotel-controller.onrender.com
+
+  # Guest-facing site: Home, About, Services, News, Contact, Profile
+  - type: web
+    name: gs-hotel-user
+    runtime: static
+    plan: free
+    rootDir: user-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://gs-hotel-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Admin panel: rooms, customers, orders, feedback, news
+  - type: web
+    name: gs-hotel-admin
+    runtime: static
+    plan: free
+    rootDir: admin-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://gs-hotel-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Controller panel: approvals, room status, reports
+  - type: web
+    name: gs-hotel-controller
+    runtime: static
+    plan: free
+    rootDir: controller-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://gs-hotel-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -1,0 +1,120 @@
+.room-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.room-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-soft);
+}
+
+.room-card-media {
+  position: relative;
+  height: 220px;
+  background: var(--color-milk-deep);
+}
+
+.room-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 1.2s var(--ease);
+}
+
+.room-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-red);
+  opacity: 0.4;
+}
+
+.room-status-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: white;
+}
+
+.room-status-ordered {
+  background: var(--color-gold);
+}
+
+.room-status-paid {
+  background: var(--color-success);
+}
+
+.room-card-pricetag {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-ink);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.room-card-body {
+  padding: 20px;
+}
+
+.room-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.room-card-heading h3 {
+  font-size: 1.15rem;
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--color-ink-soft);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.like-btn:hover {
+  transform: scale(1.08);
+}
+
+.like-btn.is-liked {
+  color: var(--color-red);
+}
+
+.room-card-desc {
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  min-height: 2.6em;
+}
+
+.room-card-cta {
+  width: 100%;
+  justify-content: center;
+}
