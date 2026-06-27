@@ -30,6 +30,9 @@ async function request(path, options = {}) {
 
 export const api = {
   // Auth
+  checkSetupStatus: () => request('/auth/setup-status'),
+  bootstrapController: (payload) =>
+    request('/auth/bootstrap-controller', { method: 'POST', body: JSON.stringify(payload) }),
   login: (username, password) =>
     request('/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) }),
   requestPasswordReset: (email) =>

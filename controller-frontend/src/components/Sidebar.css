@@ -10,7 +10,8 @@
   display: flex;
   flex-direction: column;
   gap: 28px;
-  z-index: 40;
+  z-index: 200;
+  transition: transform 0.3s var(--ease);
 }
 
 .sidebar-brand {
@@ -20,9 +21,15 @@
   padding: 0 8px;
 }
 
+.sidebar-close-btn {
+  display: none;
+  margin-left: auto;
+}
+
 .brand-mark {
   width: 38px;
   height: 38px;
+  flex-shrink: 0;
   border-radius: 10px;
   background: var(--color-red);
   color: white;
@@ -50,6 +57,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  overflow-y: auto;
 }
 
 .sidebar-link {
@@ -73,27 +81,6 @@
   background: var(--color-red-soft);
   color: var(--color-red);
   font-weight: 600;
-}
-
-@media (max-width: 960px) {
-  .sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    flex-direction: row;
-    align-items: center;
-    overflow-x: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--color-line);
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-  }
-
-  .sidebar-link {
-    white-space: nowrap;
-  }
 }
 
 .sidebar-footer {
@@ -122,4 +109,75 @@
 .sidebar-logout:hover {
   background: var(--color-red-soft);
   color: var(--color-red);
+}
+
+/* Mobile top bar - only visible below the breakpoint */
+.mobile-topbar {
+  display: none;
+}
+
+/* Backdrop shown behind the sidebar when it's open as an overlay on mobile */
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .sidebar-close-btn {
+    display: flex;
+  }
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-line);
+    padding: 14px 18px;
+  }
+
+  .mobile-topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-menu-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--color-line);
+    background: var(--color-milk);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink);
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 26, 24, 0.45);
+    z-index: 190;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebar-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

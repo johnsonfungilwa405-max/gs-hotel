@@ -59,6 +59,19 @@ router.get('/me', requireAuth(), async (req, res) => {
   res.json({ staff: req.staff });
 });
 
+// GET /api/auth/setup-status
+// Public check used by the frontend Setup page to know whether the
+// one-time controller bootstrap is still available.
+router.get('/setup-status', async (req, res) => {
+  try {
+    const existing = await pool.query("SELECT id FROM staff_accounts WHERE role = 'controller'");
+    res.json({ needs_setup: existing.rows.length === 0 });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to check setup status' });
+  }
+});
+
 // POST /api/auth/bootstrap-controller
 // One-time setup route: creates the FIRST controller account, only works
 // if no controller account exists yet. After that, this route always

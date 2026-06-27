@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
+import Setup from './pages/Setup';
 import Overview from './pages/Overview';
 import Approvals from './pages/Approvals';
 import RoomStatus from './pages/RoomStatus';
@@ -13,6 +14,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/setup" element={<Setup />} />
 
       <Route
         element={

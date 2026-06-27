@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { Lock, User, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -18,6 +18,18 @@ export default function Login() {
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    // If no controller account exists yet, send first-time visitors to setup
+    // instead of a login form they can't possibly use.
+    api
+      .checkSetupStatus()
+      .then((res) => {
+        if (res.needs_setup) navigate('/setup', { replace: true });
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (account) return <Navigate to="/" replace />;
 
