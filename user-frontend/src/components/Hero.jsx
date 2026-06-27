@@ -27,7 +27,7 @@ export default function Hero() {
       </div>
 
       <div className="container hero-content">
-        <p className="eyebrow hero-eyebrow">Dar es Salaam</p>
+        <p className="eyebrow hero-eyebrow">Chunya, Mbeya</p>
         <h1 className="hero-title">
           Welcome to <span>GS Hotel</span>
         </h1>
