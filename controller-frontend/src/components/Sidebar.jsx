@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutGrid, ShieldCheck, BedDouble, BarChart3, Users, LogOut, KeyRound, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import './Sidebar.css';
 
 const LINKS = [
   { to: '/', label: 'Overview', icon: LayoutGrid },

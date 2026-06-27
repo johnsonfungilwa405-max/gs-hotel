@@ -181,3 +181,28 @@
     pointer-events: auto;
   }
 }
+
+@media (max-width: 960px) {
+  .app-shell > .sidebar-brand,
+  .app-shell > .sidebar-nav,
+  .app-shell > .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    z-index: 999;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0) !important;
+  }
+
+  .mobile-topbar {
+    display: flex !important;
+  }
+}
