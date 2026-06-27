@@ -47,7 +47,7 @@ export default function Contact() {
             </div>
             <div className="contact-detail">
               <MapPin size={18} />
-              <span>Dar es Salaam, Tanzania</span>
+              <span>Chunya, Mbeya, Tanzania</span>
             </div>
           </div>
 
