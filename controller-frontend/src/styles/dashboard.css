@@ -602,3 +602,140 @@ a {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Manage admins */
+.admin-create-form {
+  margin-bottom: 24px;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 18px;
+}
+
+@media (max-width: 640px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Auth / Login page */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-milk);
+  padding: 24px;
+}
+
+.auth-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-soft);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.auth-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: none;
+  border: none;
+  color: var(--color-red);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 16px;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-hint {
+  font-size: 0.86rem;
+  margin-bottom: 18px;
+}
+
+.auth-dev-code {
+  background: var(--color-warning-soft);
+  color: #8a6a23;
+  font-size: 0.84rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.account-card {
+  max-width: 480px;
+}
+
+.account-detail {
+  font-size: 0.9rem;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.account-detail strong {
+  color: var(--color-ink);
+}
+
+.account-form .field {
+  margin-bottom: 16px;
+}
+
+.account-success {
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+/* Modal centering (used if any controller page adds a modal later) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(33, 26, 24, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.modal-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  max-width: 440px;
+  width: 100%;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  position: relative;
+  margin: auto;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.3);
+}

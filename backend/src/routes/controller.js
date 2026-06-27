@@ -31,10 +31,11 @@ router.patch('/approvals/:id/approve', async (req, res) => {
     const payload = request.payload;
 
     if (request.request_type === 'new_room') {
+      const photos = (payload.photo_urls || []).slice(0, 7);
       await client.query(
         `INSERT INTO rooms (room_number, price, description, photo_urls, is_approved)
          VALUES ($1, $2, $3, $4, TRUE)`,
-        [payload.room_number, payload.price, payload.description || null, payload.photo_urls || []]
+        [payload.room_number, payload.price, payload.description || null, photos]
       );
     } else if (request.request_type === 'price_change') {
       await client.query(

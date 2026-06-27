@@ -119,3 +119,31 @@ CREATE INDEX IF NOT EXISTS idx_orders_room ON orders(room_id);
 CREATE INDEX IF NOT EXISTS idx_orders_customer ON orders(customer_id);
 CREATE INDEX IF NOT EXISTS idx_service_orders_service ON service_orders(service_id);
 CREATE INDEX IF NOT EXISTS idx_approval_status ON approval_requests(status);
+
+-- Staff accounts: logins for the Admin and Controller dashboards.
+-- Only the controller role can create new admin accounts (enforced in
+-- the route layer, not the database). The very first controller account
+-- is created once via the seed script / a one-time setup route.
+CREATE TABLE IF NOT EXISTS staff_accounts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  username VARCHAR(50) UNIQUE NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(20) NOT NULL, -- admin | controller
+  full_name VARCHAR(150),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Password reset codes for staff accounts. A short-lived code is issued
+-- and must be supplied along with the new password to complete a reset.
+CREATE TABLE IF NOT EXISTS password_resets (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  staff_account_id UUID REFERENCES staff_accounts(id) ON DELETE CASCADE,
+  code VARCHAR(10) NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  used BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_staff_role ON staff_accounts(role);
+CREATE INDEX IF NOT EXISTS idx_password_resets_account ON password_resets(staff_account_id);

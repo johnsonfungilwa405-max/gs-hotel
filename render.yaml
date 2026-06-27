@@ -23,6 +23,8 @@ services:
           property: connectionString
       - key: ALLOWED_ORIGINS
         value: https://gs-hotel-user.onrender.com,https://gs-hotel-admin.onrender.com,https://gs-hotel-controller.onrender.com
+      - key: JWT_SECRET
+        generateValue: true
 
   # Guest-facing site: Home, About, Services, News, Contact, Profile
   - type: web

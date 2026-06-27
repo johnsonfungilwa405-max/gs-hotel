@@ -99,6 +99,45 @@ approved, the change applies immediately on the live site.
 
 ## Authentication
 
+The Admin and Controller dashboards are protected by a login system — nobody can reach
+either one without a valid username and password.
+
+- **The Controller is the only role that can create Admin accounts.** This matches the
+  brief's "controller regulates everything" rule.
+- **First-time setup**: since there's no controller account when the database is brand new,
+  there's a one-time bootstrap route. Call it once (e.g. with `curl`, or a tool like
+  Postman/Insomnia) right after running migrations:
+
+  ```bash
+  curl -X POST https://your-backend-url.onrender.com/api/auth/bootstrap-controller \
+    -H "Content-Type: application/json" \
+    -d '{"username":"yourname","email":"you@example.com","password":"a-strong-password","full_name":"Your Name"}'
+  ```
+
+  This route automatically refuses to run again once a controller account exists, so it's
+  safe to leave in place.
+- Once logged in as controller, use the **Manage Admins** page in the Controller panel to
+  create admin accounts for hotel staff.
+- **Forgot password**: both dashboards have a "Forgot your password?" link on the login
+  screen. It generates a reset code tied to the account's email. Since no email-sending
+  service is connected yet, the code is returned directly in the response/UI for testing —
+  see the `dev_code` field in `backend/src/routes/auth.js` (`/api/auth/request-reset`). Wire
+  up a real email provider (e.g. Resend, SendGrid) there when you're ready, and remove the
+  `dev_code` field from the response.
+- Set a real `JWT_SECRET` environment variable in production — `render.yaml` already
+  generates one automatically for the backend service.
+
+## Room photos
+
+Admins can attach up to **7 photos per room** (enforced both in the Admin UI and on the
+backend, so the limit holds regardless of how the request is made). Photos are stored as
+image URLs — paste a link per photo field. Real file upload from the admin's device would
+require persistent storage, which Render's free tier doesn't include by default; this can
+be added later with a service like Cloudinary or an S3-compatible bucket if needed.
+
+## Guest accounts (separate from staff accounts)
+
 For now, guests are identified by phone number (an ID is generated automatically, e.g.
 `GS-0001`). Creating a full account with email/password or Google sign-in is optional and
-stubbed for future upgrade — see `backend/src/routes/customers.js`.
+stubbed for future upgrade — see `backend/src/routes/customers.js`. This is separate from
+the staff login system described above.

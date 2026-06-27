@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Plus, Trash2 } from 'lucide-react';
 import { api } from '../api';
+
+const MAX_PHOTOS = 7;
 
 export default function RoomFormModal({ mode, room, onClose, onDone }) {
   const [roomNumber, setRoomNumber] = useState(room?.room_number || '');
   const [price, setPrice] = useState(room?.price || '');
   const [description, setDescription] = useState(room?.description || '');
-  const [photoUrls, setPhotoUrls] = useState((room?.photo_urls || []).join(', '));
+  const [photoUrls, setPhotoUrls] = useState(
+    room?.photo_urls && room.photo_urls.length > 0 ? room.photo_urls : ['']
+  );
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -16,9 +20,29 @@ export default function RoomFormModal({ mode, room, onClose, onDone }) {
     price: `Propose new price — Room ${room?.room_number}`,
   };
 
+  const updatePhoto = (index, value) => {
+    setPhotoUrls((urls) => urls.map((u, i) => (i === index ? value : u)));
+  };
+
+  const addPhotoField = () => {
+    if (photoUrls.length >= MAX_PHOTOS) return;
+    setPhotoUrls((urls) => [...urls, '']);
+  };
+
+  const removePhotoField = (index) => {
+    setPhotoUrls((urls) => urls.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const cleanedPhotos = photoUrls.map((u) => u.trim()).filter(Boolean);
+    if (cleanedPhotos.length > MAX_PHOTOS) {
+      setError(`You can add a maximum of ${MAX_PHOTOS} photos per room.`);
+      return;
+    }
+
     setSubmitting(true);
     try {
       if (mode === 'add') {
@@ -26,13 +50,13 @@ export default function RoomFormModal({ mode, room, onClose, onDone }) {
           room_number: roomNumber,
           price: Number(price),
           description,
-          photo_urls: photoUrls.split(',').map((s) => s.trim()).filter(Boolean),
+          photo_urls: cleanedPhotos,
         });
         onDone('New room submitted for controller approval.');
       } else if (mode === 'edit') {
         await api.updateRoom(room.id, {
           description,
-          photo_urls: photoUrls.split(',').map((s) => s.trim()).filter(Boolean),
+          photo_urls: cleanedPhotos,
         });
         onDone('Room details updated.');
       } else if (mode === 'price') {
@@ -75,10 +99,41 @@ export default function RoomFormModal({ mode, room, onClose, onDone }) {
                 <span>Description</span>
                 <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
               </label>
-              <label className="field">
-                <span>Photo URLs (comma-separated)</span>
-                <textarea rows={2} value={photoUrls} onChange={(e) => setPhotoUrls(e.target.value)} />
-              </label>
+
+              <div className="field">
+                <span>
+                  Room photos ({photoUrls.filter((u) => u.trim()).length}/{MAX_PHOTOS})
+                </span>
+                <div className="photo-input-list">
+                  {photoUrls.map((url, index) => (
+                    <div key={index} className="photo-input-row">
+                      <input
+                        type="text"
+                        placeholder={`Photo URL ${index + 1}`}
+                        value={url}
+                        onChange={(e) => updatePhoto(index, e.target.value)}
+                      />
+                      {photoUrls.length > 1 && (
+                        <button
+                          type="button"
+                          className="icon-btn icon-btn-danger"
+                          onClick={() => removePhotoField(index)}
+                          aria-label="Remove photo"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {photoUrls.length < MAX_PHOTOS && (
+                  <button type="button" className="btn btn-outline btn-sm photo-add-btn" onClick={addPhotoField}>
+                    <Plus size={14} /> Add another photo
+                  </button>
+                )}
+                <p className="photo-hint">Up to {MAX_PHOTOS} photos so guests can see every part of the room.</p>
+              </div>
             </>
           )}
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const pool = require('../config/db');
+const { requireAuth } = require('../middleware/auth');
 
 // Generates a simple human-friendly customer code like GS-0001
 async function nextCustomerCode(client) {
@@ -79,7 +80,7 @@ router.post('/register', async (req, res) => {
 });
 
 // GET /api/customers - list (Admin use: see all customers currently in the hotel)
-router.get('/', async (req, res) => {
+router.get('/', requireAuth(['admin', 'controller']), async (req, res) => {
   try {
     const result = await pool.query('SELECT id, customer_code, full_name, phone_number, email, has_account, created_at FROM customers ORDER BY created_at DESC');
     res.json(result.rows);

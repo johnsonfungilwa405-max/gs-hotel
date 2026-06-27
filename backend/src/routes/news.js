@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const { requireAuth } = require('../middleware/auth');
 
 // GET /api/news
 router.get('/', async (req, res) => {
@@ -13,8 +14,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/news - admin posts an update
-router.post('/', async (req, res) => {
+// POST /api/news - admin posts an update (requires login)
+router.post('/', requireAuth(['admin', 'controller']), async (req, res) => {
   const { title, body, photo_url } = req.body;
   if (!title || !body) return res.status(400).json({ error: 'title and body are required' });
 

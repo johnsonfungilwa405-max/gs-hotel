@@ -21,11 +21,16 @@ router.post('/rooms', async (req, res) => {
   const { room_number, price, description, photo_urls } = req.body;
   if (!room_number || !price) return res.status(400).json({ error: 'room_number and price are required' });
 
+  const photos = (photo_urls || []).slice(0, 7);
+  if ((photo_urls || []).length > 7) {
+    return res.status(400).json({ error: 'You can add a maximum of 7 photos per room' });
+  }
+
   try {
     const request = await pool.query(
       `INSERT INTO approval_requests (request_type, target_table, payload)
        VALUES ('new_room', 'rooms', $1) RETURNING *`,
-      [JSON.stringify({ room_number, price, description, photo_urls: photo_urls || [] })]
+      [JSON.stringify({ room_number, price, description, photo_urls: photos })]
     );
     res.status(201).json({ message: 'Room submitted for controller approval', request: request.rows[0] });
   } catch (err) {
@@ -56,11 +61,16 @@ router.patch('/rooms/:id/price', async (req, res) => {
 // PATCH /api/admin/rooms/:id - non-price edits (photos, description) - direct, no approval needed
 router.patch('/rooms/:id', async (req, res) => {
   const { description, photo_urls } = req.body;
+
+  if (photo_urls && photo_urls.length > 7) {
+    return res.status(400).json({ error: 'You can add a maximum of 7 photos per room' });
+  }
+
   try {
     const result = await pool.query(
       `UPDATE rooms SET description = COALESCE($1, description), photo_urls = COALESCE($2, photo_urls), updated_at = now()
        WHERE id = $3 RETURNING *`,
-      [description, photo_urls, req.params.id]
+      [description, photo_urls ? photo_urls.slice(0, 7) : null, req.params.id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Room not found' });
     res.json(result.rows[0]);

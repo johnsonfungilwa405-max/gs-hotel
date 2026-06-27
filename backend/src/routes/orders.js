@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const { requireAuth } = require('../middleware/auth');
 
 // POST /api/orders
 // body: { customer_id, room_id, stay_duration_nights, check_in_date? }
@@ -54,7 +55,7 @@ router.post('/', async (req, res) => {
 });
 
 // PATCH /api/orders/:id/pay - mark an order paid, room status -> paid
-router.patch('/:id/pay', async (req, res) => {
+router.patch('/:id/pay', requireAuth(['admin', 'controller']), async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -82,7 +83,7 @@ router.patch('/:id/pay', async (req, res) => {
 });
 
 // PATCH /api/orders/:id/complete - guest checks out, room becomes free again
-router.patch('/:id/complete', async (req, res) => {
+router.patch('/:id/complete', requireAuth(['admin', 'controller']), async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -110,7 +111,7 @@ router.patch('/:id/complete', async (req, res) => {
 });
 
 // GET /api/orders - all orders, joined with room + customer (Admin/Controller use)
-router.get('/', async (req, res) => {
+router.get('/', requireAuth(['admin', 'controller']), async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT o.*, r.room_number, c.customer_code, c.full_name, c.phone_number

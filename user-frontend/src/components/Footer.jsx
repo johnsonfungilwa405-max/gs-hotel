@@ -15,7 +15,7 @@ export default function Footer() {
 
         <div className="footer-contact">
           <span><Phone size={15} /> +255 700 000 000</span>
-          <span><MapPin size={15} /> Chunya, Mbeya, Tanzania</span>
+          <span><MapPin size={15} /> Dar es Salaam, Tanzania</span>
         </div>
 
         <p className="footer-copy">&copy; {new Date().getFullYear()} GS Hotel. All rights reserved.</p>

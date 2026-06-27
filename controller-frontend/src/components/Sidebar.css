@@ -95,3 +95,31 @@
     white-space: nowrap;
   }
 }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-account {
+  font-size: 0.74rem;
+  color: var(--color-ink-soft);
+  padding: 0 14px 8px;
+}
+
+.sidebar-logout {
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-body);
+}
+
+.sidebar-logout:hover {
+  background: var(--color-red-soft);
+  color: var(--color-red);
+}

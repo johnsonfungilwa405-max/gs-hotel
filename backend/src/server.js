@@ -11,6 +11,8 @@ const newsRoutes = require('./routes/news');
 const adminRoutes = require('./routes/admin');
 const controllerRoutes = require('./routes/controller');
 const visitsRoutes = require('./routes/visits');
+const authRoutes = require('./routes/auth');
+const { requireAuth } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -49,9 +51,10 @@ app.use('/api/customers', customersRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/news', newsRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/controller', controllerRoutes);
+app.use('/api/admin', requireAuth(['admin', 'controller']), adminRoutes);
+app.use('/api/controller', requireAuth(['controller']), controllerRoutes);
 app.use('/api/visits', visitsRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });

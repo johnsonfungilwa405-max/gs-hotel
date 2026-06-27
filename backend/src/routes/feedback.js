@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const { requireAuth } = require('../middleware/auth');
 
 // POST /api/feedback - customer submits feedback (Contact tab)
 router.post('/', async (req, res) => {
@@ -19,8 +20,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/feedback - admin reads all feedback
-router.get('/', async (req, res) => {
+// GET /api/feedback - admin reads all feedback (requires login)
+router.get('/', requireAuth(['admin', 'controller']), async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT f.*, c.customer_code, c.full_name, c.phone_number
@@ -35,8 +36,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// PATCH /api/feedback/:id/respond - admin responds to feedback
-router.patch('/:id/respond', async (req, res) => {
+// PATCH /api/feedback/:id/respond - admin responds to feedback (requires login)
+router.patch('/:id/respond', requireAuth(['admin', 'controller']), async (req, res) => {
   const { admin_response } = req.body;
   if (!admin_response) return res.status(400).json({ error: 'admin_response is required' });
 

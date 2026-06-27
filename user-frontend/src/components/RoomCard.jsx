@@ -56,6 +56,14 @@ export default function RoomCard({ room, onOrder }) {
         {statusLabel && <span className={`room-status-badge room-status-${room.status}`}>{statusLabel}</span>}
 
         <div className="room-card-pricetag">TZS {Number(room.price).toLocaleString()} / night</div>
+
+        {photos.length > 1 && (
+          <div className="room-card-dots">
+            {photos.map((_, i) => (
+              <span key={i} className={i === photoIndex ? 'is-active' : ''} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="room-card-body">
