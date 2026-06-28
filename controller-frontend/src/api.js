@@ -1,7 +1,11 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 function getToken() {
-  return localStorage.getItem('gs_staff_token');
+  try {
+    return localStorage.getItem('gs_staff_token');
+  } catch {
+    return null;
+  }
 }
 
 async function request(path, options = {}) {
@@ -19,8 +23,12 @@ async function request(path, options = {}) {
 
     if (token) {
       // We had a token and it was rejected - the session really did expire.
-      localStorage.removeItem('gs_staff_token');
-      localStorage.removeItem('gs_staff_account');
+      try {
+        localStorage.removeItem('gs_staff_token');
+        localStorage.removeItem('gs_staff_account');
+      } catch {
+        // storage unusable - nothing more we can do here
+      }
       if (!window.location.pathname.startsWith('/login')) {
         window.location.href = '/login';
       }
