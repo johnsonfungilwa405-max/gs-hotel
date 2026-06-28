@@ -15,10 +15,21 @@ async function request(path, options = {}) {
   });
 
   if (res.status === 401) {
-    localStorage.removeItem('gs_staff_token');
-    localStorage.removeItem('gs_staff_account');
-    window.location.href = '/login';
-    throw new Error('Session expired, please log in again');
+    const body = await res.json().catch(() => ({}));
+
+    if (token) {
+      // We had a token and it was rejected - the session really did expire.
+      localStorage.removeItem('gs_staff_token');
+      localStorage.removeItem('gs_staff_account');
+      if (!window.location.pathname.startsWith('/login')) {
+        window.location.href = '/login';
+      }
+      throw new Error('Session expired, please log in again');
+    }
+
+    // No token was sent (e.g. a login attempt) - this is just a normal
+    // "not authorized" response, not a session expiry.
+    throw new Error(body.error || 'Invalid username or password');
   }
 
   if (!res.ok) {
